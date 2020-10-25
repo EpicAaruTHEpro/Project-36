@@ -1,55 +1,67 @@
 //Create variables here
 
 var dog, dogImg, happyDog, database, foodS, foodStock;
+var feedButton, addButton, fedTime, lastFed, foodObj, foodImage, milk;
 
 function preload()
 {
   //load images here
   dogImg = loadImage("images/dogImg.png");
   happyDog = loadImage("images/dogImg1.png");
+  foodImage = loadImage("images/Milk.png");
 }
 
 function setup() {
   database = firebase.database();
-  createCanvas(500, 500);
-  dog = createSprite(250,250,50,50);
+  createCanvas(600, 500);
+  dog = createSprite(500,200,50,50);
   dog.addImage(dogImg);
   dog.scale = 0.2;
-  ballPosRef = database.ref("Food");
-  ballPosRef.on("value", readStock);
+  foodS = 0;
+  foodObj = new Food();
+  feedButton=createButton("feed the dog");
+  feedButton.position(700,95);
+  feedButton.mousePressed(foodObj.deductFood);
+
+  addButton=createButton("add food");
+  addButton.position(800,95);
+  addButton.mousePressed(foodObj.updateFoodStock);
 }
 
 
 function draw() {  
   background(46,139,87);
 
-  if (foodS !== undefined) {
-    if (keyWentDown(UP_ARROW)){
-      writeStock(foodS);
-      dog.addImage(happyDog);
-    }
-  }
+  foodObj.display();
+  fedTime=database.ref("FeedTime");
+  fedTime.on("value", function (data) {
+    lastFed=data.val();
+  })
   drawSprites();
   //add styles here
   fill(0);
   textSize(20);
-  text("Food Remaining: " + foodS,200,100);
-  text("Press Up arrow to feed dog", 200, 50);
-}
+  //text("Food Remaining: " + foodS,200,100);
+  var time=0;
+  //time =lastFed;
+  if (lastFed>12 && lastFed<24) {
+    time = lastFed - 12;
+    text("Last Fed: " + time + "PM", 200, 50);
+  }
 
-function readStock(data) {
-  foodS = data.val();
-}
+  else if (lastFed==12) {
+    time = lastFed;
+    text("Last Fed: " + time + "PM", 200, 50);
+  }
 
-function writeStock(x) {
-  if (x<=0) {
-    x=0;
+  else if (lastFed==0) {
+    time = lastFed+12;
+    text("Last Fed: " + time + "AM", 200, 50);
   }
 
   else {
-    x-=1;
+    time = lastFed;
+    text("Last Fed: " + time + "AM", 200, 50);
   }
-  database.ref('/').update({
-    Food: x
-  })
+  
 }
