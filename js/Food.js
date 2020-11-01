@@ -27,6 +27,18 @@ class Food{
           })
     }
 
+    bedroom() {
+        background(bedroomImg);
+    }
+
+    garden() {
+        background(gardenImg, 550, 500);
+    }
+
+    washroom() {
+        background(washroomImg, 550, 500);
+    }
+
     display() {
         var x=80,y=100;
 
@@ -44,5 +56,6 @@ class Food{
                 x+=30;
             }
         }
+        
     }
 }
