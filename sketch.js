@@ -19,7 +19,7 @@ function preload()
 function setup() {
   database = firebase.database();
   createCanvas(600, 500);
-  dog = createSprite(500,200,50,50);
+  dog = createSprite(520,200,50,50);
   dog.addImage(dogImg);
   dog.scale = 0.2;
   foodS = 0;
